@@ -1,0 +1,44 @@
+.user-select-none .svg-container {
+    height: 213px !important;
+}
+
+.Select-value-label {
+    color: rgb(0, 0, 0) !important;
+}
+
+.Select--single > .Select-control .Select-value, .Select-placeholder {
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 4px;
+    font-size: 14px; /* Ajuste do tamanho da fonte */
+}
+
+/* Ajuste do tamanho da fonte para os títulos dos filtros */
+.titulo-filtro {
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Dropdown menu options */
+.VirtualizedSelectOption {
+    background-color: rgb(255, 255, 255);
+    color: rgb(160, 70, 70);
+    font-size: 14px; /* Ajuste do tamanho da fonte para as opções do dropdown */
+}
+
+/* Estilos gerais para o contêiner do gráfico */
+#container-grafico-top-clientes {
+    padding: 10px;
+}
+
+/* Estilização específica para os nomes no gráfico, se acessível via CSS */
+#bar-chart-top-clientes .nome-cliente {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%; /* Ajuste a largura conforme necessário */
+}
+
+svg.main-svg {
+    border-radius: 15px !important; /* Forçar aplicação */
+    overflow: hidden !important; /* Esconder partes que saiam fora da borda arredondada */
+}

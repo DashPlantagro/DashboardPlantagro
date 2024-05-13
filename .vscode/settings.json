@@ -1,0 +1,11 @@
+{
+    "python.analysis.extraPaths": [
+        "./Vendas",
+        "./Estoque",
+        "./Contas",
+        "./Clientes",
+        "./Compras",
+        "./Banco de Dados",
+        "./Meta"
+    ]
+}
