@@ -93,7 +93,7 @@ def update_chart(start_date=None, end_date=None, selected_reps_ids=None,selected
                 END
     """
     df = pd.read_sql(query, conn) 
-    print('VALOR TOTAL TRANSAÇÃO CPF OU CNPJ: ' + query)     
+    
     # Formata a coluna 'TOTAL_VENDAS' para o padrão monetário brasileiro
     df['TOTAL_VENDAS_formatado'] = df['TOTAL_VENDAS'].apply(formatar_para_moeda_brasileira)
     df['hover_text'] = df['TIPODOCUMENTO'] + '<br>Total Vendas: ' + df['TOTAL_VENDAS'].apply(formatar_para_moeda_brasileira)

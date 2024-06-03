@@ -195,67 +195,69 @@ def layout_vendas():
         html.Div(id='container-grafico-vendas-diarias'),
         html.Div(id='container-grafico-vendas-mensais'),
         html.Div(id='container-grafico-vendas-anuais'),
+        html.Div(id='container-mapa-vendas'),
     ])
 
 
 def layout_compras():
     return html.Div([
-        html.H2("Compras", style={"textAlign": "center", "margin": "20px 0"}),  
-        dbc.Card([
-            html.H2('Total de Compras no Período', style={"textAlign": "center", "fontSize": "18px"}),
-            html.H3(id='container-valor-total-de-compras', style={"textAlign": "center", "fontSize": "24px"})
-        ], style={        
-            "margin": "10px", 
-            "padding": "10px", 
-            "maxHeight": "100px",
-            "display": "flex",
-            "justifyContent": "center",
-            "overflow": "hidden"}),
-          
-        dbc.Card([
-            html.H2('Total de Saving no Período', style={"textAlign": "center", "fontSize": "18px"}),
-            html.H3(id='container-valor-total-saving', style={"textAlign": "center", "fontSize": "24px"})
-        ], style={        
-            "margin": "10px", 
-            "padding": "10px", 
-            "maxHeight": "100px",
-            "display": "flex",
-            "justifyContent": "center",
-            "overflow": "hidden"}),
-                      
-        html.Div([
-            html.Div(id='container-grafico-total-marca-produtos', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ], className='row'),
-
-        html.Div([
-            html.Div(id='container-grafico-total-produtos-comprados', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ], className='row'),
-
-        html.Div([
-            html.Div(id='container-grafico-abc-produtos', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ], className='row'),
-
-        html.Div([
-            html.H2("Mapa de Compras dos Fornecedores", style={"textAlign": "center", "marginTop": "10px"}),
-            html.Div(id='container-mapa-compras', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
+        html.H2("Compras", style={"textAlign": "center", "margin": "20px"}),
+        dbc.Row([  # Usar Row para organizar as Cards em uma linha
+            dbc.Col(  # Card 1 em uma coluna com metade da largura
+                dbc.Card([
+                    html.H2('Total de Compras no Período', style={"textAlign": "center", "fontSize": "18px"}),
+                    html.H3(id='container-valor-total-de-compras', style={"textAlign": "center", "fontSize": "24px"})
+                ], style={
+                    "margin": "10px",
+                    "padding": "10px",
+                    "maxHeight": "100px",
+                    "display": "flex",
+                    "justifyContent": "center",
+                    "overflow": "hidden"
+                }),
+                width=6  # Define a largura como metade da linha
+            ),
+            dbc.Col(  # Card 2 na outra metade da largura
+                dbc.Card([
+                    html.H2('Total de Saving no Período', style={"textAlign": "center", "fontSize": "18px"}),
+                    html.H3(id='container-valor-total-saving', style={"textAlign": "center", "fontSize": "24px"})
+                ], style={
+                    "margin": "10px",
+                    "padding": "10px",
+                    "maxHeight": "100px",
+                    "display": "flex",
+                    "justifyContent": "center",
+                    "overflow": "hidden"
+                }),
+                width=6
+            )
+        ]),
+        dbc.Row([  # Outra Row para os gráficos
+            dbc.Col(html.Div(id='container-grafico-total-marca-produtos'), width=6),
+            dbc.Col(html.Div(id='container-grafico-total-produtos-comprados'), width=6)
         ]),
 
-        html.Div([
-            html.Div(id='container-grafico-abc-fornecedores', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ]),
+            html.Div([
+                html.Div(id='container-grafico-abc-produtos', style={"margin-top": "10px" },className='six columns',),
+            ], className='row'),
+
+            html.Div([
+                html.H2("Mapa de Compras dos Fornecedores", style={"textAlign": "center", "marginTop": "10px"}),
+                html.Div(id='container-mapa-compras'),
+            ]),
+
+            html.Div([
+                html.Div(id='container-grafico-abc-fornecedores', style={"margin-top": "10px" }),
+            ]),
     ])
 
 
 def layout_estoque():
     return html.Div([
-
-        html.Div([
-            html.Div(id='container-valor-liquido-agrupamento-produtos', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ], className='row'),
-
-        html.Div([
-            html.Div(id='container-valor-liquido-por-produto', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
-        ], className='row'),
+        dbc.Row([
+            dbc.Col(html.Div(id='container-valor-liquido-agrupamento-produtos'), width=6),
+            dbc.Col(html.Div(id='container-valor-liquido-por-produto'), width=6),
+        ]),
     ])
 
 def layout_clientes():
@@ -300,15 +302,15 @@ def layout_clientes():
 
                 html.Div([
                     html.H2("Vendas CPF & CNPJ", style={"textAlign": "center", "marginTop": "10px"}),
-                    html.Div(id='container-valor-total-cpf-cnpj', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
+                    html.Div(id='container-valor-total-cpf-cnpj', style={ 'margin': '10px', 'padding': '10px'}),
                 ]),
                 html.Div([
                     html.H2("Mapa de Distribuição de Clientes", style={"textAlign": "center", "marginTop": "10px"}),
-                    html.Div(id='container-mapa-clientes-regiao', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
+                    html.Div(id='container-mapa-clientes-regiao', style={'margin': '10px', 'padding': '10px'}),
                 ]),
                 html.Div([
                     html.H2("Crescimento da Base de Clientes", style={"textAlign": "center", "marginTop": "10px"}),
-                    html.Div(id='container-crescimento-clientes', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
+                    html.Div(id='container-crescimento-clientes', style={'margin': '10px', 'padding': '10px'}),
                 ]),
         ]),
             
@@ -319,29 +321,41 @@ def layout_clientes():
 def layout_contas():
     return html.Div([
             html.H2("Contas", style={"textAlign": "center", "margin": "20px 0"}),  
-            dbc.Card([
-            dbc.CardBody([
-                    html.H2('Total de Duplicatas a Receber Vencidas no Período', style={"textAlign": "center", "fontSize": "18px"}),
-                    html.H3(id='container-valor-total-duplicatas-vencidas', style={"textAlign": "center", "fontSize": "18px"})
-                ])
-            ], style={        
-                "margin": "10px", 
-                "padding": "10px", 
-                "maxHeight": "100px",
-                "display": "flex",
-                "justifyContent": "center",
-                "overflow": "hidden"}),
+            dbc.Row([
+                dbc.Col(
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H2('Total de Duplicatas a Receber Vencidas no Período', style={"textAlign": "center", "fontSize": "18px"}),
+                            html.Div(id='container-valor-total-duplicatas-vencidas', style={"textAlign": "center", "fontSize": "18px"})
+                        ])
+                    ], style={        
+                        "margin": "10px", 
+                        "padding": "10px", 
+                        "maxHeight": "300px",  # Ajuste a altura conforme necessário
+                        "display": "flex",
+                        "justifyContent": "center",
+                        "overflow": "hidden"
+                    }),
+                    width=6
+                ),
 
-            dbc.Card([
-                html.H2('Total de Duplicatas a Pagar Vencidas no Período', style={"textAlign": "center", "fontSize": "18px"}),
-                html.H3(id='container-valor-total-duplicatas-a-pagar-vencidas', style={"textAlign": "center", "fontSize": "18px"})
-            ], style={        
-                "margin": "10px", 
-                "padding": "10px", 
-                "maxHeight": "100px",
-                "display": "flex",
-                "justifyContent": "center",
-                "overflow": "hidden"}),
+                dbc.Col(
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H2('Total de Duplicatas a Pagar Vencidas no Período', style={"textAlign": "center", "fontSize": "18px"}),
+                            html.H3(id='container-valor-total-duplicatas-a-pagar-vencidas', style={"textAlign": "center", "fontSize": "18px"})
+                        ])
+                    ], style={        
+                        "margin": "10px", 
+                        "padding": "10px", 
+                        "maxHeight": "300px",
+                        "display": "flex",
+                        "justifyContent": "center",
+                        "overflow": "hidden"
+                    }),
+                    width=6
+                ),
+            ]),
         html.Div([
             html.Div(id='total-despesas-por-filial', className='six columns', style={'backgroundColor': 'lightblue', 'margin': '10px', 'padding': '10px'}),
         ],className='row'),
@@ -839,18 +853,31 @@ def update_chart_comparando_vendas_atuais_x_passado(start_date, end_date):
     Input('date-picker-range-app', 'end_date')]
 )
 def update_total_dup_vencida(start_date, end_date):
-    total_compras = valor_total_duplicatas_vencidas(start_date, end_date)
-    return f"Total de Duplicatas Vencidas no Periodo (sem contar Juros nem Multas): {total_compras}"
+    valores = valor_total_duplicatas_vencidas(start_date, end_date)
+    total_valor_formatado = locale.format_string('%.2f', valores['TOTAL_VALOR'], grouping=True)
+    valor_desconto_formatado = locale.format_string('%.2f', valores['VALOR_DESCONTO'], grouping=True)
+    multa_formatado = locale.format_string('%.2f', valores['MULTA'], grouping=True)
+    juros_formatado = locale.format_string('%.2f', valores['JUROS'], grouping=True)
+    recebido_formatado = locale.format_string('%.2f', valores['RECEBIDO'], grouping=True)
+    total_calculado_formatado = locale.format_string('%.2f', valores['TOTAL_CALCULADO'], grouping=True)
+
+    return [
+        html.H6(f"Valor: R$ {total_valor_formatado}"),
+        html.H6(f"Desconto: R$ {valor_desconto_formatado}"),
+        html.H6(f"Multa: R$ {multa_formatado}"),
+        html.H6(f"Juros: R$ {juros_formatado}"),
+        html.H6(f"Recebido: R$ {recebido_formatado}"),
+        html.H2(f"Saldo: R$ {total_calculado_formatado}")
+    ]
 
 # Callback para atualizar o total de Duplicatas a Pagar Vencidas
 @app.callback(
     Output('container-valor-total-duplicatas-a-pagar-vencidas', 'children'),
     [Input('date-picker-range-app', 'start_date'),
-    Input('date-picker-range-app', 'end_date'),
-    Input('filtro-representante', 'value')]
+    Input('date-picker-range-app', 'end_date')]
 )
-def update_total_dup_vencida(start_date, end_date, selected_reps_ids):
-    total_compras = valor_total_contas_a_pagar_vencidas(start_date, end_date, selected_reps_ids)
+def update_total_dup_vencida(start_date, end_date):
+    total_compras = valor_total_contas_a_pagar_vencidas(start_date, end_date)
     return f"Total de Duplicatas a Pagar Vencidas no Periodo: {total_compras}"
 
 # Callback para atualizar o gráfico de metas x vendedor

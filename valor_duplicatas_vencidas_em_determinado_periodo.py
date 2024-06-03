@@ -16,40 +16,42 @@ def valor_total_duplicatas_vencidas(start_date=None, end_date=None):
     if start_date is None or end_date is None:
         end_date = datetime.today().strftime('%Y-%m-%d')
         start_date = (datetime.today() - pd.DateOffset(months=1)).strftime('%Y-%m-%d')
+    
     query = f""" 
-SELECT
-    SUM(PDUPREC.VALOR) AS TOTAL_VALOR
-FROM
-    PDUPREC
-WHERE
-    PDUPREC.DTVENCTO BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD')
-    AND TO_DATE('{end_date}', 'YYYY-MM-DD')
-    AND PDUPREC.QUITADA ='N'    """
+        SELECT
+            SUM(PDUPREC.VALOR) AS TOTAL_VALOR,
+            SUM(PDUPREC.DESCONTO) AS VALOR_DESCONTO,
+            SUM(PDUPREC.MULTA) AS MULTA, 
+            SUM(PDUPREC.JUROS) AS JUROS,
+            SUM(VWM_DUPLICATASRECEBER_EMPRESA.RECEBIDO) AS RECEBIDO,
+            SUM(PDUPREC.VALOR) - SUM(PDUPREC.DESCONTO) + SUM(PDUPREC.JUROS) + SUM(PDUPREC.MULTA) - SUM(VWM_DUPLICATASRECEBER_EMPRESA.RECEBIDO) AS TOTAL_CALCULADO
+        FROM
+            PDUPREC
+        LEFT JOIN 
+            VWM_DUPLICATASRECEBER_EMPRESA ON VWM_DUPLICATASRECEBER_EMPRESA.DUPREC = PDUPREC.DUPREC AND VWM_DUPLICATASRECEBER_EMPRESA.EMPRESA = PDUPREC.EMPRESA 
+        WHERE
+            PDUPREC.DTVENCTO BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD')
+            AND TO_DATE('{end_date}', 'YYYY-MM-DD')
+            AND PDUPREC.QUITADA = 'N'
+    """
     
     df = pd.read_sql(query, conn)
     
-    total_duplicata = df['TOTAL_VALOR'].iloc[0] if not df.empty else 0
-
-    if total_duplicata is None:
-        total_duplicata = 0
-    total_duplicata_formatado = locale.format_string('%.2f', total_duplicata, grouping=True)
-
-    return total_duplicata_formatado
-
-def create_layout():
-    total_duplicatas = valor_total_duplicatas_vencidas()  # busca a soma de todas as vendas realizadas em X periodo
-    layout = html.Div(id='container-valor-total-duplicatas-vencidas', children=[
-        dbc.Row([
-            dbc.Col(width=1),
-            dbc.Col(
-                dbc.Card([
-                    html.H2('Total de Duplicatas a Receber Vencidas no Periodo', style={"font-family": "Voltaire", "font-size": "20px", "text-align": "center"}),
-                    html.H3(f'Soma de Total de Duplicatas Vencidas: R$ {total_duplicatas}', style={"text-align": "center"})
-                ],
-                    style={"padding": "10px"}
-                ),
-                width=4
-            ), dbc.Col(width=1)
-        ])
-    ])
-    return layout
+    if df.empty:
+        return {
+            'TOTAL_VALOR': 0,
+            'VALOR_DESCONTO': 0,
+            'MULTA': 0,
+            'JUROS': 0,
+            'RECEBIDO': 0,
+            'TOTAL_CALCULADO': 0
+        }
+    
+    return {
+        'TOTAL_VALOR': df['TOTAL_VALOR'].iloc[0] or 0,
+        'VALOR_DESCONTO': df['VALOR_DESCONTO'].iloc[0] or 0,
+        'MULTA': df['MULTA'].iloc[0] or 0,
+        'JUROS': df['JUROS'].iloc[0] or 0,
+        'RECEBIDO': df['RECEBIDO'].iloc[0] or 0,
+        'TOTAL_CALCULADO': df['TOTAL_CALCULADO'].iloc[0] or 0
+    }

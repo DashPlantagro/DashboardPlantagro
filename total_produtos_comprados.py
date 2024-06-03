@@ -93,7 +93,6 @@ def update_chart(start_date,end_date,selected_rep_ids, selected_emp_ids, selecte
             }
         }
     
-    produto = df['PRODUTO'].tolist()
     # Ordenar o DataFrame do maior para o menor valor de 'TOTAL_COMPRAS'
     df = df.sort_values(by='TOTAL_COMPRAS', ascending=False)
 
@@ -107,6 +106,15 @@ def update_chart(start_date,end_date,selected_rep_ids, selected_emp_ids, selecte
     # Ajusta as cores dos três primeiros registros para verde
     if num_registros >= 3:
         cores[:3] = ['green'] * 3
+
+
+    # Assegure-se de que não há valores None na coluna 'MARCA_PRODUTO'
+    df['PRODUTO'] = df['PRODUTO'].fillna('Descrição Indisponível')
+
+    # Aplicando truncagem
+    df['PRODUTO'] = df['PRODUTO'].apply(lambda x: (x[:12] + '...') if len(x) > 15 else x)
+
+    produto = df['PRODUTO'].tolist()
 
     # Formatando o valor para o formato monetário brasileiro com o símbolo "R$"
     total_compras = [f'R$ {locale.currency(valor, grouping=True, symbol=None)}' for valor in df['TOTAL_COMPRAS']]

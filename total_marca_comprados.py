@@ -97,7 +97,6 @@ def update_chart(start_date,end_date,selected_rep_ids, selected_emp_ids, selecte
             }
         }
     
-    marca = df['MARCA_PRODUTO'].tolist()
     # Ordenar o DataFrame do maior para o menor valor de 'TOTAL_COMPRAS'
     df = df.sort_values(by='TOTAL_COMPRAS', ascending=False)
 
@@ -112,13 +111,23 @@ def update_chart(start_date,end_date,selected_rep_ids, selected_emp_ids, selecte
     if num_registros >= 3:
         cores[:3] = ['green'] * 3
 
+
+
+    # Assegure-se de que não há valores None na coluna 'MARCA_PRODUTO'
+    df['MARCA_PRODUTO'] = df['MARCA_PRODUTO'].fillna('Descrição Indisponível')
+
+    # Aplicando truncagem
+    df['MARCA_PRODUTO'] = df['MARCA_PRODUTO'].apply(lambda x: (x[:12] + '...') if len(x) > 15 else x)
+
+    # Crie a lista depois de aplicar a truncagem
+    marca = df['MARCA_PRODUTO'].tolist()
+    
     # Formatando o valor para o formato monetário brasileiro com o símbolo "R$"
     total_compras = [f'R$ {locale.currency(valor, grouping=True, symbol=None)}' for valor in df['TOTAL_COMPRAS']]
     hover_text = [
         f"Marca: {cli} <br> Valor: {val}"
         for cli, val in zip(marca, total_compras)
     ]
-
 
     # Dados do gráfico
     dados_grafico = [{

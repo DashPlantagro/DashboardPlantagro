@@ -114,6 +114,13 @@ def update_chart(start_date, end_date, selected_reps_ids,selected_emp_ids,select
     if len(df) >= 3:
         cores[:3] = ['green', 'green', 'green']  # Os três primeiros em verde
 
+
+    # Assegure-se de que não há valores None na coluna 'MARCA_PRODUTO'
+    df['DESCRICAO'] = df['DESCRICAO'].fillna('Descrição Indisponível')
+
+    # Aplicando truncagem
+    df['DESCRICAO'] = df['DESCRICAO'].apply(lambda x: (x[:12] + '...') if len(x) > 15 else x)        
+
     # Preparação dos dados
     descricao = df['DESCRICAO']
     total_compras = [f'R$ {locale.currency(valor, grouping=True, symbol=None)}' for valor in df['TOTAL_COMPRAS']]

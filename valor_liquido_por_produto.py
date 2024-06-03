@@ -108,6 +108,12 @@ def update_chart(start_date, end_date, selected_reps_ids,selected_emp_ids,select
     # Define a cor padrão para todos os registros
     cores = ['#17a2b8'] * num_registros
 
+   # Assegure-se de que não há valores None na coluna 'DESCRICAO'
+    df['DESCRICAO'] = df['DESCRICAO'].fillna('Descrição Indisponível')
+
+    # Aplicando truncagem
+    df['DESCRICAO'] = df['DESCRICAO'].apply(lambda x: (x[:12] + '...') if len(x) > 15 else x)    
+
     produto = df['DESCRICAO'].tolist()
     total_compras = [f'R$ {locale.currency(valor, grouping=True, symbol=None)}' for valor in df['TOTAL_COMPRAS']]
 
