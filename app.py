@@ -242,7 +242,7 @@ def layout_compras():
             ], className='row'),
 
             html.Div([
-                html.H2("Mapa de Compras dos Fornecedores", style={"textAlign": "center", "marginTop": "10px"}),
+                html.H2("Mapa de Compras da Empresa", style={"textAlign": "center", "marginTop": "10px"}),
                 html.Div(id='container-mapa-compras'),
             ]),
 
@@ -878,7 +878,18 @@ def update_total_dup_vencida(start_date, end_date):
 )
 def update_total_dup_vencida(start_date, end_date):
     total_compras = valor_total_contas_a_pagar_vencidas(start_date, end_date)
-    return f"Total de Duplicatas a Pagar Vencidas no Periodo: {total_compras}"
+    total_valor_formatado = locale.format_string('%.2f', total_compras['TOTAL_VALOR'], grouping=True)
+    valor_desconto_formatado = locale.format_string('%.2f', total_compras['DESCONTO'], grouping=True)
+    juros_formatado = locale.format_string('%.2f', total_compras['JUROS'], grouping=True)
+    recebido_formatado = locale.format_string('%.2f', total_compras['PAGO'], grouping=True)
+    total_calculado_formatado = locale.format_string('%.2f', total_compras['SALDO'], grouping=True)
+    return [
+        html.H6(f"Valor: R$ {total_valor_formatado}"),
+        html.H6(f"Desconto: R$ {valor_desconto_formatado}"),
+        html.H6(f"Juros: R$ {juros_formatado}"),
+        html.H6(f"Pago: R$ {recebido_formatado}"),
+        html.H2(f"Saldo: R$ {total_calculado_formatado}")
+    ]
 
 # Callback para atualizar o gráfico de metas x vendedor
 @app.callback(

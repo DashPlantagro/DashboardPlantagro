@@ -29,6 +29,8 @@ def valor_total_duplicatas_vencidas(start_date=None, end_date=None):
             PDUPREC
         LEFT JOIN 
             VWM_DUPLICATASRECEBER_EMPRESA ON VWM_DUPLICATASRECEBER_EMPRESA.DUPREC = PDUPREC.DUPREC AND VWM_DUPLICATASRECEBER_EMPRESA.EMPRESA = PDUPREC.EMPRESA 
+        JOIN
+        	PEMPRESA ON PEMPRESA.EMPRESA = PDUPREC.EMPRESA 
         WHERE
             PDUPREC.DTVENCTO BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD')
             AND TO_DATE('{end_date}', 'YYYY-MM-DD')
@@ -44,7 +46,7 @@ def valor_total_duplicatas_vencidas(start_date=None, end_date=None):
             'MULTA': 0,
             'JUROS': 0,
             'RECEBIDO': 0,
-            'TOTAL_CALCULADO': 0
+            'SALDO': 0
         }
     
     return {

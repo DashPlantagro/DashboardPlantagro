@@ -18,25 +18,39 @@ def valor_total_contas_a_pagar_vencidas(start_date=None, end_date=None):
         start_date = (datetime.today() - pd.DateOffset(months=1)).strftime('%Y-%m-%d')
 
     query = f""" 
-SELECT
-    SUM(PDUPPAGA.VALOR) AS TOTAL_VALOR
-FROM
-    PDUPPAGA
-JOIN
-    PREPRESE ON PREPRESE.REPRESENT = PDUPPAGA.REPRESENT
-WHERE
-    PDUPPAGA.DTVENCTO BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD')
-    AND TO_DATE('{end_date}', 'YYYY-MM-DD')
-    AND PDUPPAGA.QUITADA ='N'
+        SELECT   
+            SUM(VWM_DUPLICATASPAGAR_EMPRESA.VALOR)  TOTAL_VALOR,
+            SUM(VWM_DUPLICATASPAGAR_EMPRESA.JUROSPEND)   JUROS,
+            SUM(VWM_DUPLICATASPAGAR_EMPRESA.DESCONTOS) DESCONTO,
+            SUM(VWM_DUPLICATASPAGAR_EMPRESA.PAGO) PAGO,
+            SUM(VWM_DUPLICATASPAGAR_EMPRESA.VALOR) + SUM(VWM_DUPLICATASPAGAR_EMPRESA.JUROSPEND) SALDO
+        FROM
+            VWM_DUPLICATASPAGAR_EMPRESA
+        JOIN
+    	    PEMPRESA ON PEMPRESA.EMPRESA = VWM_DUPLICATASPAGAR_EMPRESA.EMPRESA 
+        WHERE
+        VWM_DUPLICATASPAGAR_EMPRESA.DTVENCTO  BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD')
+        AND TO_DATE('{end_date}', 'YYYY-MM-DD')
+        AND VWM_DUPLICATASPAGAR_EMPRESA.QUITADA ='N'
     """
     
     df = pd.read_sql(query, conn)
     print('SQL VALOR DUPLICATAS A PAGAR: ' + query)
+
+    if df.empty:
+        return {
+            'TOTAL_VALOR': 0,
+            'DESCONTO': 0,
+            'JUROS': 0,
+            'PAGO': 0,
+            'SALDO': 0
+        }
     
-    total_duplicata_pagar = df['TOTAL_VALOR'].iloc[0] if not df.empty else 0
+    return {
+        'TOTAL_VALOR': df['TOTAL_VALOR'].iloc[0] or 0,
+        'DESCONTO': df['DESCONTO'].iloc[0] or 0,
+        'JUROS': df['JUROS'].iloc[0] or 0,
+        'PAGO': df['PAGO'].iloc[0] or 0,
+        'SALDO': df['SALDO'].iloc[0] or 0
+    }
 
-    if total_duplicata_pagar is None:
-        total_duplicata_pagar = 0
-    total_duplicata_pagar_formatado = locale.format_string('%.2f', total_duplicata_pagar, grouping=True)
-
-    return total_duplicata_pagar_formatado
